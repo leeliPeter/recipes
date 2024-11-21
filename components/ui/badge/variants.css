@@ -1,0 +1,25 @@
+@layer components {
+  .badge-success {
+    @apply bg-green-500 hover:bg-green-600;
+  }
+
+  .badge-warning {
+    @apply bg-yellow-500 hover:bg-yellow-600;
+  }
+
+  .badge-destructive {
+    @apply bg-red-500 hover:bg-red-600;
+  }
+
+  .badge-primary {
+    @apply bg-blue-500 hover:bg-blue-600;
+  }
+
+  /* variant={
+    recipe.difficulty === "Easy"
+      ? "success"
+      : recipe.difficulty === "Medium"
+      ? "warning"
+      : "destructive"
+  } */
+}
