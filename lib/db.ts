@@ -6,7 +6,12 @@ if (!process.env.MONGODB_URI) {
 
 const MONGODB_URI: string = process.env.MONGODB_URI;
 
-let cached = global.mongoose;
+interface MongooseConnection {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+}
+
+let cached = global.mongoose as MongooseConnection;
 
 if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
@@ -20,15 +25,26 @@ async function connectDB() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      family: 4,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then(() => {
-      return cached;
-    });
+    cached.promise = mongoose
+      .connect(MONGODB_URI, opts)
+      .then((mongoose) => {
+        cached.conn = mongoose;
+        return mongoose;
+      })
+      .catch((error) => {
+        console.error("MongoDB connection error:", error);
+        throw error;
+      });
   }
 
   try {
-    cached.conn = await cached.promise;
+    await cached.promise;
   } catch (e) {
     cached.promise = null;
     throw e;
