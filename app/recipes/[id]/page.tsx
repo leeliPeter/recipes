@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft, Edit } from "lucide-react";
+import RecipeLoading from "./loading";
 
 function BackButton() {
   return (
@@ -104,21 +105,14 @@ export default async function RecipeDetail({
   params: Promise<{ id: string }>;
 }) {
   const resolvedParams = await params;
-  const recipe = await getRecipe(resolvedParams.id);
 
   return (
-    <div className="recipes min-h-screen bg-background p-8">
+    <div className="recipes min-h-screen bg-background p-4 sm:p-8">
       <div className="container mx-auto max-w-4xl">
         <BackButton />
 
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center min-h-[50vh]">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-100" />
-            </div>
-          }
-        >
-          <RecipeContent recipe={recipe} />
+        <Suspense fallback={<RecipeLoading />}>
+          <RecipeContent recipe={await getRecipe(resolvedParams.id)} />
         </Suspense>
       </div>
     </div>
