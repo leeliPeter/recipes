@@ -18,10 +18,12 @@ import { IRecipeData } from "@/models/Recipe";
 export default function EditRecipeForm({ recipe }: { recipe: IRecipeData }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setFormError(null);
 
     try {
       const formData = new FormData(e.currentTarget);
@@ -29,8 +31,11 @@ export default function EditRecipeForm({ recipe }: { recipe: IRecipeData }) {
         name: formData.get("name") as string,
         description: formData.get("description") as string,
         difficulty: formData.get("difficulty") as "Easy" | "Medium" | "Hard",
-        ingredients: formData.get("ingredients")?.toString().split("\n") || [],
-        steps: formData.get("steps")?.toString().split("\n") || [],
+        ingredients:
+          formData.get("ingredients")?.toString().split("\n").filter(Boolean) ||
+          [],
+        steps:
+          formData.get("steps")?.toString().split("\n").filter(Boolean) || [],
       };
 
       await editRecipe(recipe._id, updatedRecipe);
@@ -38,31 +43,41 @@ export default function EditRecipeForm({ recipe }: { recipe: IRecipeData }) {
       router.refresh();
     } catch (error) {
       console.error("Error updating recipe:", error);
+      setFormError(
+        error instanceof Error ? error.message : "Failed to update recipe"
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
       <div className="space-y-4">
-        <h1 className="text-4xl font-bold">Edit Recipe</h1>
+        <h1 className="text-2xl sm:text-4xl font-bold">Edit Recipe</h1>
         <div className="space-y-2">
           <label htmlFor="name" className="text-sm font-medium">
-            Name
+            Name (min. 3 characters)
           </label>
-          <Input id="name" name="name" defaultValue={recipe.name} required />
+          <Input
+            id="name"
+            name="name"
+            defaultValue={recipe.name}
+            required
+            className="text-sm sm:text-base"
+          />
         </div>
 
         <div className="space-y-2">
           <label htmlFor="description" className="text-sm font-medium">
-            Description
+            Description (min. 10 characters)
           </label>
           <Textarea
             id="description"
             name="description"
             defaultValue={recipe.description}
             required
+            className="text-sm sm:text-base"
           />
         </div>
 
@@ -71,7 +86,7 @@ export default function EditRecipeForm({ recipe }: { recipe: IRecipeData }) {
             Difficulty
           </label>
           <Select name="difficulty" defaultValue={recipe.difficulty}>
-            <SelectTrigger>
+            <SelectTrigger className="text-sm sm:text-base">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -89,7 +104,7 @@ export default function EditRecipeForm({ recipe }: { recipe: IRecipeData }) {
           <Textarea
             id="ingredients"
             name="ingredients"
-            className="h-36"
+            className="h-36 text-sm sm:text-base"
             defaultValue={recipe.ingredients.join("\n")}
             required
           />
@@ -102,16 +117,28 @@ export default function EditRecipeForm({ recipe }: { recipe: IRecipeData }) {
           <Textarea
             id="steps"
             name="steps"
-            className="h-36"
+            className="h-36 text-sm sm:text-base"
             defaultValue={recipe.steps.join("\n")}
             required
           />
         </div>
       </div>
 
-      <Button type="submit" disabled={loading}>
-        {loading ? "Saving..." : "Save Changes"}
-      </Button>
+      <div className="flex flex-col gap-4">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="text-sm sm:text-base"
+        >
+          {loading ? "Saving..." : "Save Changes"}
+        </Button>
+
+        {formError && (
+          <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-md text-xs sm:text-sm">
+            {formError}
+          </div>
+        )}
+      </div>
     </form>
   );
 }

@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 // Base interface for recipe data
 export interface IRecipeData {
@@ -25,13 +26,7 @@ const RecipeSchema = new Schema<IRecipeDocument>(
     _id: {
       type: String,
       required: true,
-      validate: {
-        validator: function (v: string) {
-          return /^recipe\d{3}$/.test(v);
-        },
-        message: (props) =>
-          `${props.value} is not a valid recipe ID! Format should be 'recipe' followed by 3 digits`,
-      },
+      default: uuidv4,
     },
     name: {
       type: String,

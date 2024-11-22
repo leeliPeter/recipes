@@ -44,7 +44,7 @@ export default async function EditRecipePage({
     <div className="recipes min-h-screen bg-background p-8">
       <div className="container mx-auto max-w-4xl">
         <BackButton id={resolvedParams.id} />
-        <div className="bg-gray-50/95 p-8 rounded-lg shadow-md">
+        <div className="bg-gray-50/95 p-4 md:p-8 rounded-lg shadow-md">
           <Suspense
             fallback={
               <div className="flex items-center justify-center min-h-[50vh]">
