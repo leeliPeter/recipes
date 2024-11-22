@@ -36,9 +36,14 @@ function RecipeContent({
         <div className="flex justify-between items-start">
           <div>
             <div className="flex items-center gap-2 sm:gap-4">
-              <h1 className="text-2xl sm:text-4xl font-bold">{recipe.name}</h1>
+              <h1
+                className="text-2xl sm:text-4xl font-bold  truncate max-w-[255px] sm:max-w-[405px] lg:max-w-[600px] xl:max-w-[700px] 
+              "
+              >
+                {recipe.name}
+              </h1>
             </div>
-            <p className="mt-1 sm:mt-2 text-sm sm:text-lg text-muted-foreground">
+            <p className="mt-1 sm:mt-2 text-sm sm:text-lg text-muted-foreground max-w-[255px] sm:max-w-[405px] lg:max-w-[600px] xl:max-w-[700px] overflow-hidden text-ellipsis [-webkit-line-clamp:2] [-webkit-box-orient:vertical] [display:-webkit-box] min-h-[2.5em]">
               {recipe.description}
             </p>
           </div>

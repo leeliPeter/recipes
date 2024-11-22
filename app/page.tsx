@@ -330,12 +330,12 @@ export default function Home() {
                 onClick={() => router.push(`/recipes/${recipe._id}`)}
               >
                 <CardHeader className="p-4 sm:p-6">
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between w-full  items-start">
                     <div>
-                      <CardTitle className="text-lg sm:text-2xl">
+                      <CardTitle className="text-lg  truncate max-w-[175px] lg:max-w-[180px] xl:max-w-[200px]  ">
                         {recipe.name}
                       </CardTitle>
-                      <CardDescription className="mt-1 sm:mt-2 text-xs sm:text-sm">
+                      <CardDescription className="mt-1 sm:mt-2 text-xs sm:text-sm max-w-[180px] lg:max-w-[150px] xl:max-w-[200px]  overflow-hidden text-ellipsis [-webkit-line-clamp:2] [-webkit-box-orient:vertical] [display:-webkit-box] min-h-[2.5em]">
                         {recipe.description}
                       </CardDescription>
                     </div>
