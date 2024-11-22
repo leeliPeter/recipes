@@ -368,7 +368,14 @@ export default function Home() {
                             <AlertDialogTitle>Delete Recipe</AlertDialogTitle>
                             <AlertDialogDescription>
                               Are you sure you want to delete &quot;
-                              {recipe.name}&quot;? This action cannot be undone.
+                              <p
+                                className=" text-center 
+                                truncate max-w-[90%]
+                        "
+                              >
+                                {recipe.name}
+                              </p>
+                              This action cannot be undone.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
