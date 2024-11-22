@@ -26,31 +26,40 @@ async function connectDB() {
     const opts = {
       bufferCommands: false,
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 60000,
+      connectTimeoutMS: 10000,
+      retryWrites: true,
+      retryReads: true,
       family: 4,
     };
 
-    cached.promise = mongoose
-      .connect(MONGODB_URI, opts)
-      .then((mongoose) => {
-        cached.conn = mongoose;
-        return mongoose;
-      })
-      .catch((error) => {
-        console.error("MongoDB connection error:", error);
-        throw error;
-      });
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then(() => {
+      cached.conn = mongoose;
+      return mongoose;
+    });
   }
 
   try {
     await cached.promise;
   } catch (e) {
     cached.promise = null;
+    console.error("MongoDB connection error:", e);
     throw e;
   }
 
   return cached.conn;
 }
+
+// Add connection error handlers
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
+});
+
+mongoose.connection.on("disconnected", () => {
+  console.log("MongoDB disconnected");
+  cached.conn = null;
+  cached.promise = null;
+});
 
 export default connectDB;
