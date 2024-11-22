@@ -2,7 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    serverActions: true,
+    serverActions: {
+      allowedOrigins: [
+        "localhost:3000",
+        "recipes-rcex1f673-leelipeters-projects.vercel.app",
+      ],
+    },
   },
   webpack: (config) => {
     config.experiments = {
@@ -10,19 +15,6 @@ const nextConfig = {
       topLevelAwait: true,
     };
     return config;
-  },
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "no-store, must-revalidate",
-          },
-        ],
-      },
-    ];
   },
 };
 
